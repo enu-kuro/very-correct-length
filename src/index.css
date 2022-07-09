@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* body {
+  padding-bottom: env(safe-area-inset-bottom);
+} */
+
+	
+/* html, body { margin:0; padding: 0; height: 100%;} */
+/* 
+body {
+  background-image:url(../public/verylong.jpeg);
+  background-size: 50%;
+  background-repeat: no-repeat;
+  background-position: right 0% top 0%;
+}  */
+
+/* https://matthewlein.com/tools/ceaser */
+.fade-out1s {
+  animation: fade-out 1s  cubic-bezier(0.755, 0.015, 0.015, 1.000) infinite;
+}
+@keyframes fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.fade-out2s {
+  animation: fade-out 2s  cubic-bezier(0.325, 0.790, 0.000, 1.000) infinite;
+}
+@keyframes fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.fade-out-once {
+  animation: fade-out 2s  cubic-bezier(0.615, 0.320, 0.000, 1.000);
+  animation-fill-mode: forwards;
+}
+@keyframes fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* https://stackoverflow.com/questions/2570972/css-font-border */
+.text-border {
+  text-shadow: -1px 0 #626262, 0 1px #626262, 1px 0 #626262, 0 -1px #626262;
+}
+
+.up-down {
+  animation: move-y 1s cubic-bezier(0.755, 0.015, 0.015, 1.000) alternate infinite;
+  position: absolute;
+}
+@keyframes move-y {
+  0% {
+    top: 0px;
+  }
+  100% {
+    top: -250px;
+  }
+}
