@@ -2,13 +2,17 @@ import { useState } from "react";
 import { LockIcon } from "../components/LockIcon";
 import { Tutorial } from "../components/Tutorial";
 import { PAGE, usePage } from "../hooks/usePage";
-
+import { isTablet, isMobile } from "react-device-detect";
+import { QRCode } from "../components/QRCode";
 export const Top = () => {
   const { setPage } = usePage();
   const [showTutorial, setShowTutorial] = useState(false);
 
   return (
     <>
+      {!isTablet && !isMobile && (
+        <QRCode url={"https://verycorrectlength.com/"} />
+      )}
       {showTutorial && (
         <Tutorial
           setShowModal={setShowTutorial}
