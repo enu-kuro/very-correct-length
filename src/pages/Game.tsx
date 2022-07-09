@@ -181,7 +181,7 @@ export const Game: FC<{
               ref={rectRef}
               width={CANVAS_WIDTH}
               height={canvasHeight}
-              draggable={true}
+              // draggable={true}
               // x={CANVAS_WIDTH / 2 - (CANVAS_WIDTH * initialScaleX) / 2}
               // y={canvasHeight - canvasHeight * initialScaleY}
               fillPatternImage={image}
