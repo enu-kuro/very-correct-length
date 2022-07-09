@@ -181,6 +181,7 @@ export const Game: FC<{
               fillPatternImage={image}
               fillPatternScaleY={canvasHeight / originalHeight}
               fillPatternScaleX={CANVAS_WIDTH / originalWidth}
+              stroke={`rgb(${vla_rgb[count]})`}
             />
             <Transformer
               ref={trRef}

@@ -102,6 +102,8 @@ const Canvas = ({
           fillPatternImage={image}
           fillPatternScaleY={canvasHeight / originalHeight}
           fillPatternScaleX={CANVAS_WIDTH / originalWidth}
+          // stroke入れたら境目のノイズが消えた！
+          stroke={`rgb(${vla_rgb[vlaNum]})`}
         />
         <Transformer
           ref={trRef}
