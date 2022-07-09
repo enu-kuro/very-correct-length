@@ -84,7 +84,7 @@ export const Result: FC<{ gradeHistory: number[] }> = ({ gradeHistory }) => {
   }, [gradeHistory]);
 
   return (
-    <div className="prose prose-slate container mx-auto flex flex-col items-center h-[600px]">
+    <div className="prose prose-slate container mx-auto flex flex-col items-center">
       <div className="text-3xl font-extrabold mt-10">
         VERY {GRADE[grade]} SCORE!
       </div>
@@ -98,7 +98,10 @@ export const Result: FC<{ gradeHistory: number[] }> = ({ gradeHistory }) => {
       </div>
       <div className="mt-2 text-sm">YOUR BEST SCORE: {highestScore}</div>
 
-      <TweetButton className="mt-4 mb-4" />
+      <TweetButton
+        className="mt-4 mb-4"
+        text={`VERY ${GRADE[grade]} SCORE!  score: ${score}`}
+      />
       <button
         className={"btn btn-wide mt-auto"}
         onClick={() => {

@@ -23,7 +23,7 @@ function generateRandomScale(canvasHeight: number) {
   const initialScaleX = Math.random() * 0.4 + 1.0;
   return [
     initialScaleX,
-    (Math.random() * 0.3 + 0.05) * (CANVAS_WIDTH / canvasHeight),
+    (Math.random() * 0.3 + 0.08) * (CANVAS_WIDTH / canvasHeight),
   ];
   // return [1.4, 0.05 * (CANVAS_WIDTH / canvasHeight)];
 }

@@ -1,11 +1,17 @@
-export const TweetButton = ({ className }: { className?: string }) => {
+export const TweetButton = ({
+  className,
+  text,
+}: {
+  className?: string;
+  text?: string;
+}) => {
   return (
     <button
       type="button"
       className={`${className} text-white bg-[#1da1f2] hover:bg-[#1da1f2]/90 focus:ring-4 focus:outline-none focus:ring-[#1da1f2]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#1da1f2]/55 mr-2 mb-2`}
       onClick={() => {
         window.open(
-          "https://twitter.com/intent/tweet?screen_name=TwitterDev&ref_src=twsrc%5Etfw",
+          `https://twitter.com/intent/tweet?screen_name=TwitterDev&hashtags=hogehoge&text=${text}`,
           "_blank",
           "noreferrer"
         );
