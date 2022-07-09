@@ -4,6 +4,7 @@ import { GRADE } from "./Game";
 import { StarIcon } from "@heroicons/react/solid";
 import { StarIcon as OutlineStarIcon } from "@heroicons/react/outline";
 import { getHighestScore, saveScoreIfHighest } from "../utils/utils";
+import { TweetButton } from "../components/TweetButton";
 
 const getMostfrequentGrade = (grades: number[]) => {
   const gradeMode = grades.reduce(
@@ -87,15 +88,17 @@ export const Result: FC<{ gradeHistory: number[] }> = ({ gradeHistory }) => {
       <div className="text-3xl font-extrabold mt-10">
         VERY {GRADE[grade]} SCORE!
       </div>
-      <div className="flex flex-row mt-5">{Stars(grade)}</div>
-      <div className="text-8xl font-extrabold mt-5">{score}</div>
-      <div className="text-xs mt-5">
+      <div className="flex flex-row mt-4">{Stars(grade)}</div>
+      <div className="text-8xl font-extrabold mt-4">{score}</div>
+      <div className="text-xs mt-2">
         <div>EXCELENT: {gradeHistory.filter((x) => x === 3).length}</div>
         <div>GREAT: {gradeHistory.filter((x) => x === 2).length}</div>
         <div>GOOD: {gradeHistory.filter((x) => x === 1).length}</div>
         <div>BAD: {gradeHistory.filter((x) => x === 0).length}</div>
       </div>
-      <div className="mt-5 text-sm">YOUR BEST SCORE: {highestScore}</div>
+      <div className="mt-2 text-sm">YOUR BEST SCORE: {highestScore}</div>
+
+      <TweetButton className="mt-4 mb-4" />
       <button
         className={"btn btn-wide mt-auto"}
         onClick={() => {
