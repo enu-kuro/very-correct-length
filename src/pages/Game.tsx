@@ -81,15 +81,6 @@ export const Game: FC<{
 
   useInterval(
     () => {
-      if (count === ANIMAL_NUM) {
-        // 画面遷移しても以下のコードは最後まで実行される。
-        setPlaying(false);
-        setTimeout(() => {
-          setPage(PAGE.RESULT);
-        }, INTERVAL);
-      } else {
-        setCount((prev) => prev + 1);
-      }
       const stretchedlength = trRef.current!.getHeight();
       const correctLength = trRef.current!.getWidth();
       console.log("長さ: ", trRef.current!.getHeight());
@@ -102,11 +93,26 @@ export const Game: FC<{
       setGradeHistory((prev) => [...prev, grade]);
 
       trRef.current!.stopTransform();
-      const [newScaleX, newScaleY] = generateRandomScale(canvasHeight);
-      rectRef.current!.scaleX(newScaleX);
-      rectRef.current!.scaleY(newScaleY);
-      rectRef.current!.x(CANVAS_WIDTH / 2 - (CANVAS_WIDTH * newScaleX) / 2);
-      rectRef.current!.y(canvasHeight - canvasHeight * newScaleY);
+      // const [newScaleX, newScaleY] = generateRandomScale(canvasHeight);
+      // rectRef.current!.scaleX(newScaleX);
+      // rectRef.current!.scaleY(newScaleY);
+      // rectRef.current!.x(CANVAS_WIDTH / 2 - (CANVAS_WIDTH * newScaleX) / 2);
+      // rectRef.current!.y(canvasHeight - canvasHeight * newScaleY);
+
+      if (count === ANIMAL_NUM) {
+        // 画面遷移しても以下のコードは最後まで実行される。
+        setPlaying(false);
+        setTimeout(() => {
+          setPage(PAGE.RESULT);
+        }, INTERVAL);
+      } else {
+        const [newScaleX, newScaleY] = generateRandomScale(canvasHeight);
+        rectRef.current!.scaleX(newScaleX);
+        rectRef.current!.scaleY(newScaleY);
+        rectRef.current!.x(CANVAS_WIDTH / 2 - (CANVAS_WIDTH * newScaleX) / 2);
+        rectRef.current!.y(canvasHeight - canvasHeight * newScaleY);
+        setCount((prev) => prev + 1);
+      }
     },
     isPlaying ? INTERVAL : null
   );
