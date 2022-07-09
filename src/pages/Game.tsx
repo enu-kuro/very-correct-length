@@ -81,9 +81,14 @@ export const Game: FC<{
 
   useInterval(
     () => {
-      // TODO: ここで良い？
       if (count === ANIMAL_NUM) {
-        setPage(PAGE.RESULT);
+        // 画面遷移しても以下のコードは最後まで実行される。
+        setPlaying(false);
+        setTimeout(() => {
+          setPage(PAGE.RESULT);
+        }, INTERVAL);
+      } else {
+        setCount((prev) => prev + 1);
       }
       const stretchedlength = trRef.current!.getHeight();
       const correctLength = trRef.current!.getWidth();
@@ -102,7 +107,6 @@ export const Game: FC<{
       rectRef.current!.scaleY(newScaleY);
       rectRef.current!.x(CANVAS_WIDTH / 2 - (CANVAS_WIDTH * newScaleX) / 2);
       rectRef.current!.y(canvasHeight - canvasHeight * newScaleY);
-      setCount((prev) => prev + 1);
     },
     isPlaying ? INTERVAL : null
   );

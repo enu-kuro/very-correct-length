@@ -85,7 +85,7 @@ export const Result: FC<{ gradeHistory: number[] }> = ({ gradeHistory }) => {
 
   return (
     <div className="prose prose-slate container mx-auto flex flex-col items-center">
-      <div className="text-3xl font-extrabold mt-10">
+      <div className="text-2xl font-extrabold mt-10">
         VERY {GRADE[grade]} SCORE!
       </div>
       <div className="flex flex-row mt-4">{Stars(grade)}</div>

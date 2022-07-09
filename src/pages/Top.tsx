@@ -16,7 +16,7 @@ export const Top = () => {
         />
       )}
       <div className="p-5 prose prose-slate container mx-auto flex flex-col items-center justify-between h-[600px]">
-        <h1 className="">VERY CORRECT LENGTH (β)</h1>
+        <h1 className="w-64 mt-10">VERY CORRECT LENGTH (β)</h1>
         <div className="flex flex-col">
           <button
             onClick={() => {
