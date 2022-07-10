@@ -17,7 +17,7 @@ const originalHeight = 800;
 const originalWidth = 800;
 const CANVAS_WIDTH = 375;
 
-const ANIMAL_NUM = 30;
+const ANIMAL_NUM = 3;
 // const CANVAS_HEIGHT = 548;
 function generateRandomScale(canvasHeight: number) {
   const initialScaleX = Math.random() * 0.4 + 1.0;
@@ -147,14 +147,14 @@ export const Game: FC<{
         <div className={"basis-1/3"}></div>
         <div
           className={
-            "mt-1 basis-1/3 text-center text-2xl text-slate-600 font-bold"
+            "mt-1 basis-1/3 text-center text-4xl text-slate-600 font-bold"
           }
         >
           {count} / {ANIMAL_NUM}
         </div>
-        <div className={"basis-1/3 text-right mr-1 mt-1 pointer-events-auto"}>
+        <div className={"basis-1/3 text-right mr-2 mt-2 pointer-events-auto"}>
           <button
-            className={"btn btn-xs btn-error"}
+            className={"btn btn-sm btn-error"}
             onClick={() => onClickQuit()}
           >
             Quit

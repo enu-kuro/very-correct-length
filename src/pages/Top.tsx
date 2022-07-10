@@ -4,6 +4,8 @@ import { Tutorial } from "../components/Tutorial";
 import { PAGE, usePage } from "../hooks/usePage";
 import { isTablet, isMobile } from "react-device-detect";
 import { QRCode } from "../components/QRCode";
+import { firebaseApp } from "../utils/firebase";
+
 export const Top = () => {
   const { setPage } = usePage();
   const [showTutorial, setShowTutorial] = useState(false);
@@ -45,7 +47,7 @@ export const Top = () => {
           </div>
         </div>
 
-        <div className={"prose-sm"}>need designer!</div>
+        {/* <div className={"prose-sm"}>need designer!</div> */}
       </div>
     </>
   );

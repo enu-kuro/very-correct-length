@@ -37,7 +37,7 @@ export const Tutorial = ({
           </div>
         )}
         <label
-          className="btn btn-sm btn-circle absolute right-2 top-2 z-50"
+          className="btn btn-circle absolute right-2 top-2 z-50"
           onClick={() => {
             setShowModal(false);
           }}

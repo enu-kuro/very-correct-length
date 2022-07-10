@@ -1,2 +1,2 @@
 yarn build
-firebase deploy
+firebase deploy --only hosting
