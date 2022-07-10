@@ -4,8 +4,11 @@ import { Tutorial } from "../components/Tutorial";
 import { PAGE, usePage } from "../hooks/usePage";
 import { isTablet, isMobile } from "react-device-detect";
 import { QRCode } from "../components/QRCode";
-import { firebaseApp } from "../utils/firebase";
+import { loginGuest } from "../utils/firebase";
 
+if (isTablet || isMobile) {
+  loginGuest();
+}
 export const Top = () => {
   const { setPage } = usePage();
   const [showTutorial, setShowTutorial] = useState(false);

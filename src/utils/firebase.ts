@@ -10,6 +10,7 @@ import {
   signInAnonymously,
 } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getFunctions, httpsCallable } from "firebase/functions";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_APIKEY,
@@ -23,9 +24,29 @@ const firebaseConfig = {
 };
 
 export const firebaseApp = initializeApp(firebaseConfig);
-const analytics = getAnalytics(firebaseApp);
-const db = getFirestore(firebaseApp);
+// const analytics = getAnalytics(firebaseApp);
+// const db = getFirestore(firebaseApp);
 
+const functions = getFunctions(firebaseApp);
+// const addNumbers = httpsCallable(functions, "addNumbers");
+// addNumbers({ firstNumber: 19, secondNumber: 33 })
+//   .then((result) => {
+//     const data = result.data;
+//     console.log(data);
+//   })
+//   .catch((error) => {
+//     console.log(error);
+//   });
+
+export const saveScore = httpsCallable(functions, "nmgIpjNOiD");
+// saveScore({ pkYRAkEQw5: "", PQ8rn0Twca33: "" })
+//   .then((result) => {
+//     const data = result.data;
+//     console.log(data);
+//   })
+//   .catch((error) => {
+//     console.log(error);
+//   });
 export const loginGuest = async () => {
   const auth = getAuth();
   // setPersistence(browserLocalPersistence) to keep the user logged in at all times.

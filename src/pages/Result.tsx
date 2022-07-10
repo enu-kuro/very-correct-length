@@ -5,7 +5,6 @@ import { StarIcon } from "@heroicons/react/solid";
 import { StarIcon as OutlineStarIcon } from "@heroicons/react/outline";
 import { getHighestScore, saveScoreIfHighest } from "../utils/utils";
 import { TweetButton } from "../components/TweetButton";
-import { loginGuest } from "../utils/firebase";
 
 const getMostfrequentGrade = (grades: number[]) => {
   const gradeMode = grades.reduce(
@@ -77,10 +76,6 @@ export const Result: FC<{ gradeHistory: number[] }> = ({ gradeHistory }) => {
   const grade = getMostfrequentGrade(gradeHistory);
   const [score, setScore] = useState<number>();
   const [highestScore, setHighestScore] = useState<number>();
-
-  useEffect(() => {
-    loginGuest();
-  }, []);
 
   useEffect(() => {
     const _score = gradeHistory.reduce((partialSum, a) => partialSum + a, 0);

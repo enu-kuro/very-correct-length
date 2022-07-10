@@ -17,7 +17,7 @@ const originalHeight = 800;
 const originalWidth = 800;
 const CANVAS_WIDTH = 375;
 
-const ANIMAL_NUM = 3;
+const ANIMAL_NUM = 30;
 // const CANVAS_HEIGHT = 548;
 function generateRandomScale(canvasHeight: number) {
   const initialScaleX = Math.random() * 0.4 + 1.0;
