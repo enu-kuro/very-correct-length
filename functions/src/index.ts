@@ -1,5 +1,6 @@
 import { AES, enc } from "crypto-js";
 import * as functions from "firebase-functions";
+const hri = require("human-readable-ids").hri;
 
 const admin = require("firebase-admin");
 admin.initializeApp();
@@ -18,16 +19,43 @@ export const nmgIpjNOiD = functions.https.onCall(
         "permission denied"
       );
     }
+
     const bestScore = Number(
       AES.decrypt(data.PQ8rn0Twca, CRYPTO_KEY + CRYPTO_KEY2).toString(enc.Utf8)
     );
-    await db.collection("users").doc(context.auth.uid).set({
-      score: bestScore,
-    });
+
+    if (bestScore !== data.score) {
+      throw new functions.https.HttpsError(
+        "invalid-argument",
+        "invalid argument"
+      );
+    }
+    await db.collection("users").doc(context.auth.uid).set(
+      {
+        score: bestScore,
+      },
+      { merge: true }
+    );
 
     return { score: data.score };
   }
 );
+
+export const createUser = functions.firestore
+  .document("users/{userId}")
+  .onCreate(async (snap, context) => {
+    const name = hri.random();
+    await db
+      .collection("users")
+      .doc(context.params.userId)
+      .set(
+        {
+          name: "very-" + name,
+        },
+        { merge: true }
+      );
+  });
+
 export const helloWorld = functions.https.onRequest((request, response) => {
   functions.logger.info("Hello logs!", { structuredData: true });
   response.send("Hello from Firebase!");

@@ -17,7 +17,8 @@
     "@types/crypto-js": "^4.1.1",
     "crypto-js": "^4.1.1",
     "firebase-admin": "^10.2.0",
-    "firebase-functions": "^3.21.0"
+    "firebase-functions": "^3.21.0",
+    "human-readable-ids": "^1.0.4"
   },
   "devDependencies": {
     "typescript": "^4.6.4"

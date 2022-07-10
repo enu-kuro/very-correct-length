@@ -50,7 +50,7 @@ export const Top = () => {
           </div>
         </div>
 
-        {/* <div className={"prose-sm"}>need designer!</div> */}
+        <div className={"prose-sm"}></div>
       </div>
     </>
   );

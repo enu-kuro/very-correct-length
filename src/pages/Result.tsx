@@ -101,7 +101,7 @@ export const Result: FC<{ gradeHistory: number[] }> = ({ gradeHistory }) => {
 
       <TweetButton
         className="mt-4 mb-4"
-        text={`VERY ${GRADE[grade]} SCORE!  score: ${score}`}
+        text={`%0D%0AVery+Short%E3%81%AB%E3%81%AA%E3%81%A3%E3%81%A6%E3%81%97%E3%81%BE%E3%81%A3%E3%81%9FAnimal%E3%81%9F%E3%81%A1%E3%82%92%E5%8A%A9%E3%81%91%E3%81%9F%E3%82%88%EF%BC%81%0D%0AVery+${GRADE[grade]}+Score%21%21%21%0D%0A%5BScore%3A+${score}%5D%0D%0A%23verycorrectlength%0D%0Averycorrectlength.com`}
       />
       <button
         className={"btn btn-wide mt-auto"}

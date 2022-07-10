@@ -9,7 +9,7 @@ import {
   setPersistence,
   signInAnonymously,
 } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { collection, getDocs, getFirestore } from "firebase/firestore";
 import { getFunctions, httpsCallable } from "firebase/functions";
 
 const firebaseConfig = {
@@ -25,7 +25,7 @@ const firebaseConfig = {
 
 export const firebaseApp = initializeApp(firebaseConfig);
 // const analytics = getAnalytics(firebaseApp);
-// const db = getFirestore(firebaseApp);
+const db = getFirestore(firebaseApp);
 
 const functions = getFunctions(firebaseApp);
 // const addNumbers = httpsCallable(functions, "addNumbers");
@@ -47,6 +47,16 @@ export const saveScore = httpsCallable(functions, "nmgIpjNOiD");
 //   .catch((error) => {
 //     console.log(error);
 //   });
+
+const usersCollectionRef = collection(db, "users");
+console.log(usersCollectionRef);
+getDocs(usersCollectionRef).then((querySnapshot) => {
+  querySnapshot.docs.forEach((doc) => {
+    console.log(doc.id);
+    console.log(doc.data());
+  });
+});
+
 export const loginGuest = async () => {
   const auth = getAuth();
   // setPersistence(browserLocalPersistence) to keep the user logged in at all times.
