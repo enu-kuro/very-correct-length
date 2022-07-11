@@ -103,7 +103,7 @@ export const Result: FC<{ gradeHistory: number[] }> = ({ gradeHistory }) => {
 
       <TweetButton
         className="mt-4 mb-4"
-        text={`%0D%0AVery+Short%E3%81%AB%E3%81%AA%E3%81%A3%E3%81%A6%E3%81%97%E3%81%BE%E3%81%A3%E3%81%9FAnimal%E3%81%9F%E3%81%A1%E3%82%92%E5%8A%A9%E3%81%91%E3%81%9F%E3%82%88%EF%BC%81%0D%0AVERY+${GRADE[grade]}+SCORE%21%21%21%0D%0A%5BScore%3A+${score}%5D%0D%0A%23verycorrectlength%0D%0Averycorrectlength.com`}
+        text={`%0D%0AVery+Short%E3%81%AB%E3%81%AA%E3%81%A3%E3%81%A6%E3%81%97%E3%81%BE%E3%81%A3%E3%81%9FAnimal%E3%81%9F%E3%81%A1%E3%82%92%E5%8A%A9%E3%81%91%E3%81%9F%E3%82%88%EF%BC%81%0D%0AVERY+${GRADE[grade]}+SCORE%21%21%21%0D%0A%5BScore%3A+${score}%5D%0D%0A%23verycorrectlength%20%23%E3%83%99%E3%83%AA%E3%83%AD%E3%83%B3%E3%82%AF%E3%82%BD%E3%82%B2%E3%83%BC%E3%83%8F%E3%83%83%E3%82%AB%E3%82%BD%E3%83%B3%0D%0Averycorrectlength.com`}
       />
       <div className="mb-5 text-center">
         <button
