@@ -9,8 +9,15 @@ import {
   setPersistence,
   signInAnonymously,
 } from "firebase/auth";
-import { collection, getDocs, getFirestore } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  getFirestore,
+  updateDoc,
+} from "firebase/firestore";
 import { getFunctions, httpsCallable } from "firebase/functions";
+import { saveUID } from "./utils";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_APIKEY,
@@ -48,14 +55,35 @@ export const saveScore = httpsCallable(functions, "nmgIpjNOiD");
 //     console.log(error);
 //   });
 
-const usersCollectionRef = collection(db, "users");
-console.log(usersCollectionRef);
-getDocs(usersCollectionRef).then((querySnapshot) => {
-  querySnapshot.docs.forEach((doc) => {
-    console.log(doc.id);
-    console.log(doc.data());
+export type UserScore = {
+  id: string;
+  name: string;
+  score: number;
+};
+export const getScores = async () => {
+  const usersCollectionRef = collection(db, "users");
+  const querySnapshot = await getDocs(usersCollectionRef);
+  const userScores = querySnapshot.docs.map((doc) => {
+    const data = doc.data();
+    return {
+      id: doc.id,
+      score: data.score,
+      name: data.name,
+    };
   });
-});
+  return userScores as UserScore[];
+};
+
+export const updateName = (uid: string, newName: string) => {
+  const usersCollectionRef = doc(db, "users", uid);
+  return updateDoc(usersCollectionRef, {
+    name: newName,
+  });
+  // .catch((error) => {
+  //   // TODO:
+  //   console.log(error);
+  // });
+};
 
 export const loginGuest = async () => {
   const auth = getAuth();
@@ -67,6 +95,7 @@ export const loginGuest = async () => {
     })
     .then((result) => {
       const user = result.user;
+      saveUID(user.uid);
       console.log("guest login success: ", user);
     })
     .catch((error) => {

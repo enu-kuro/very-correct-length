@@ -5,6 +5,8 @@ import { PAGE, usePage } from "../hooks/usePage";
 import { isTablet, isMobile } from "react-device-detect";
 import { QRCode } from "../components/QRCode";
 import { loginGuest } from "../utils/firebase";
+import { LeaderBoard } from "../components/LeaderBoard";
+import { ChartSquareBarIcon } from "@heroicons/react/solid";
 
 if (isTablet || isMobile) {
   loginGuest();
@@ -12,6 +14,7 @@ if (isTablet || isMobile) {
 export const Top = () => {
   const { setPage } = usePage();
   const [showTutorial, setShowTutorial] = useState(false);
+  const [showLearderBoard, setShowLearderBoard] = useState(false);
 
   return (
     <>
@@ -24,6 +27,7 @@ export const Top = () => {
           vlaNum={Math.floor(Math.random() * 92)}
         />
       )}
+      {showLearderBoard && <LeaderBoard setShowModal={setShowLearderBoard} />}
       <div className="p-5 prose prose-slate container mx-auto flex flex-col items-center justify-between h-[600px]">
         <h1 className="w-64 mt-10">VERY CORRECT LENGTH (β)</h1>
         <div className="flex flex-col">
@@ -48,9 +52,18 @@ export const Top = () => {
           >
             HOW TO PLAY?
           </div>
+          <div className="mt-5 text-center">
+            <button
+              className={"btn btn-sm btn-accent"}
+              onClick={() => {
+                setShowLearderBoard(true);
+              }}
+            >
+              Leader Board
+              <ChartSquareBarIcon className="w-5 h-5" />
+            </button>
+          </div>
         </div>
-
-        <div className={"prose-sm"}></div>
       </div>
     </>
   );

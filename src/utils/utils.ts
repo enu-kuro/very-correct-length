@@ -55,3 +55,12 @@ export const getHighestScore = () => {
   console.log(highestScore);
   return highestScore;
 };
+
+const UID_KEY = "uid";
+export const saveUID = (uid: string) => {
+  localStorage.setItem(UID_KEY, uid);
+};
+
+export const getUID = () => {
+  return localStorage.getItem(UID_KEY);
+};
