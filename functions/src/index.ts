@@ -1,21 +1,21 @@
-import { collection } from "firebase/firestore";
 import { AES, enc } from "crypto-js";
 import * as functions from "firebase-functions";
+
+import * as admin from "firebase-admin";
 const hri = require("human-readable-ids").hri;
 
-const admin = require("firebase-admin");
 admin.initializeApp();
 const db = admin.firestore();
 
 enum PlayMode {
-  EasyMode = "EasyMode",
-  HardMode = "HardMode",
+  EASY = "EasyMode",
+  HARD = "HardMode",
 }
 
 const CRYPTO_KEY = "VeryLongAnimals";
 const CRYPTO_KEY2 = "verycorrectlength";
 
-const CRYPTO_KEY_EASY = "easy";
+// const CRYPTO_KEY_EASY = "easy";
 const CRYPTO_KEY_HARD = "hard";
 
 export const nmgIpjNOiD = functions.https.onCall(
@@ -70,19 +70,22 @@ export const createUser = functions.firestore
 export const onCreateAuthUser = functions.auth.user().onCreate(async (user) => {
   const name = "very-" + hri.random();
 
-  const easyModePromise = db.collection(PlayMode.EasyMode).doc(user.uid).set(
+  const easyModePromise = db.collection(PlayMode.EASY).doc(user.uid).set(
     {
       name: name,
     },
     { merge: true }
   );
-  const hardModePromise = db.collection(PlayMode.HardMode).doc(user.uid).set(
+  const hardModePromise = db.collection(PlayMode.HARD).doc(user.uid).set(
     {
       name: name,
     },
     { merge: true }
   );
-  const promises = [easyModePromise, hardModePromise];
+  const updateUserPromise = admin.auth().updateUser(user.uid, {
+    displayName: name,
+  });
+  const promises = [easyModePromise, hardModePromise, updateUserPromise];
   return Promise.all(promises).catch((error) => {
     console.error(error);
   });
@@ -108,12 +111,13 @@ export const nmgIpjNOiD2 = functions.https.onCall(
 
     let cryptoKeyMode = "";
     let collectionName = "";
-    if (data.mode === PlayMode.EasyMode) {
-      cryptoKeyMode = CRYPTO_KEY_EASY;
-      collectionName = PlayMode.EasyMode;
-    } else if (data.mode === PlayMode.HardMode) {
+    if (data.mode === PlayMode.EASY) {
+      // easymodeは以前と同じkeyにしておく
+      // cryptoKeyMode = CRYPTO_KEY_EASY;
+      collectionName = PlayMode.EASY;
+    } else if (data.mode === PlayMode.HARD) {
       cryptoKeyMode = CRYPTO_KEY_HARD;
-      collectionName = PlayMode.HardMode;
+      collectionName = PlayMode.HARD;
     } else {
       throw new functions.https.HttpsError(
         "invalid-argument",
@@ -142,5 +146,78 @@ export const nmgIpjNOiD2 = functions.https.onCall(
     );
 
     return { score: data.score };
+  }
+);
+
+export const getScores = functions.https.onCall(async (data, context) => {
+  if (!context.auth) {
+    throw new functions.https.HttpsError(
+      "permission-denied",
+      "permission denied"
+    );
+  }
+  const getScores = (mode: PlayMode) => {
+    return db
+      .collection(mode)
+      .orderBy("score", "desc")
+      .limit(30)
+      .get()
+      .then((querySnapshot) => {
+        return querySnapshot.docs
+          .map((doc) => {
+            const data = doc.data();
+            return {
+              id: doc.id,
+              score: data.score,
+              name: data.name,
+            };
+          })
+          .filter((data) => {
+            return data.score !== undefined;
+          });
+      });
+  };
+  const result = await Promise.all([
+    getScores(PlayMode.EASY),
+    getScores(PlayMode.HARD),
+  ]).then(([easyScores, hardScores]) => {
+    return { easy: easyScores, hard: hardScores };
+  });
+
+  return result;
+});
+
+export const updateUserName = functions.https.onCall(
+  async (data: { name: string }, context) => {
+    if (!context.auth) {
+      throw new functions.https.HttpsError(
+        "permission-denied",
+        "permission denied"
+      );
+    }
+    const name = data.name;
+    const uid = context.auth.uid;
+    const easyModePromise = db.collection(PlayMode.EASY).doc(uid).set(
+      {
+        name: name,
+      },
+      { merge: true }
+    );
+    const hardModePromise = db.collection(PlayMode.HARD).doc(uid).set(
+      {
+        name: name,
+      },
+      { merge: true }
+    );
+    const updateUserPromise = admin.auth().updateUser(uid, {
+      displayName: name,
+    });
+    const promises = [easyModePromise, hardModePromise, updateUserPromise];
+    await Promise.all(promises).catch((error) => {
+      console.error(error);
+      throw new functions.https.HttpsError("internal", "internal");
+    });
+
+    return { ok: true };
   }
 );

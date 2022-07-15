@@ -33,6 +33,7 @@ export const Top = () => {
         <div className="flex flex-col">
           <button
             onClick={() => {
+              window.history.replaceState(null, "", "/");
               setPage(PAGE.COUNT_DOWN);
             }}
             className={"btn btn-wide"}
@@ -40,9 +41,17 @@ export const Top = () => {
             Very easy mode
           </button>
 
-          <button disabled className={"btn btn-wide gap-2 mt-10"}>
+          {/* <button disabled className={"btn btn-wide gap-2 mt-10"}> */}
+          <button
+            className={"btn btn-wide mt-10"}
+            onClick={() => {
+              window.history.replaceState(null, "", "/#hard");
+              console.log(window.location.hash);
+              setPage(PAGE.COUNT_DOWN);
+            }}
+          >
             Very hard mode
-            <LockIcon className="w-5 h-5" />
+            {/* <LockIcon className="w-5 h-5" /> */}
           </button>
           <div
             className={"prose-sm mt-2 text-center underline"}

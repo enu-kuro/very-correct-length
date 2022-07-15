@@ -2,22 +2,16 @@ import { initializeApp } from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 import "firebase/storage";
-import { getAnalytics } from "firebase/analytics";
+// import { getAnalytics } from "firebase/analytics";
 import {
   browserLocalPersistence,
   getAuth,
   setPersistence,
   signInAnonymously,
 } from "firebase/auth";
-import {
-  collection,
-  doc,
-  getDocs,
-  getFirestore,
-  updateDoc,
-} from "firebase/firestore";
+import { doc, getFirestore, updateDoc } from "firebase/firestore";
 import { getFunctions, httpsCallable } from "firebase/functions";
-import { saveUID } from "./utils";
+// import { PlayMode } from "./utils";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_APIKEY,
@@ -45,7 +39,16 @@ const functions = getFunctions(firebaseApp);
 //     console.log(error);
 //   });
 
-export const saveScore = httpsCallable(functions, "nmgIpjNOiD");
+export const saveScore = httpsCallable(functions, "nmgIpjNOiD2");
+export const getScores = httpsCallable<
+  {},
+  { easy: UserScore[]; hard: UserScore[] }
+>(functions, "getScores");
+
+export const updateUserName = httpsCallable<{ name: string }, { ok: boolean }>(
+  functions,
+  "updateUserName"
+);
 // saveScore({ pkYRAkEQw5: "", PQ8rn0Twca33: "" })
 //   .then((result) => {
 //     const data = result.data;
@@ -60,19 +63,19 @@ export type UserScore = {
   name: string;
   score: number;
 };
-export const getScores = async () => {
-  const usersCollectionRef = collection(db, "users");
-  const querySnapshot = await getDocs(usersCollectionRef);
-  const userScores = querySnapshot.docs.map((doc) => {
-    const data = doc.data();
-    return {
-      id: doc.id,
-      score: data.score,
-      name: data.name,
-    };
-  });
-  return userScores as UserScore[];
-};
+// export const getScores = async () => {
+//   const usersCollectionRef = collection(db, "users");
+//   const querySnapshot = await getDocs(usersCollectionRef);
+//   const userScores = querySnapshot.docs.map((doc) => {
+//     const data = doc.data();
+//     return {
+//       id: doc.id,
+//       score: data.score,
+//       name: data.name,
+//     };
+//   });
+//   return userScores as UserScore[];
+// };
 
 export const updateName = (uid: string, newName: string) => {
   const usersCollectionRef = doc(db, "users", uid);
@@ -95,7 +98,7 @@ export const loginGuest = async () => {
     })
     .then((result) => {
       const user = result.user;
-      saveUID(user.uid);
+      // saveUID(user.uid);
       console.log("guest login success: ", user);
     })
     .catch((error) => {
@@ -103,4 +106,12 @@ export const loginGuest = async () => {
       const errorMessage = error.message;
       console.log("guest login error: ", errorCode, errorMessage);
     });
+};
+
+export const getCurrentUser = () => {
+  return getAuth().currentUser;
+};
+
+export const refetchCurrentUser = () => {
+  return getAuth().currentUser?.reload() || Promise.reject();
 };

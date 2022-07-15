@@ -8,10 +8,12 @@ import { CountDown } from "./pages/CountDown";
 import { Game } from "./pages/Game";
 import { Result } from "./pages/Result";
 import { Top } from "./pages/Top";
+import { PlayMode } from "./utils/utils";
 
 const Page = () => {
   const [gradeHistory, setGradeHistory] = useState<number[]>([]);
   const windowSize = useWindowSize();
+  const mode = window.location.hash === "#hard" ? PlayMode.HARD : PlayMode.EASY;
   const { page } = usePage();
   if (page === PAGE.COUNT_DOWN) {
     return <CountDown />;
@@ -25,11 +27,12 @@ const Page = () => {
         <Game
           windowHeight={windowSize.height}
           setGradeHistory={setGradeHistory}
+          mode={mode}
         />
       );
     }
   } else if (page === PAGE.RESULT) {
-    return <Result gradeHistory={gradeHistory} />;
+    return <Result gradeHistory={gradeHistory} mode={mode} />;
   } else {
     return <div>Error!</div>;
   }

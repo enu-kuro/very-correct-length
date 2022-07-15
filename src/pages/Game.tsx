@@ -4,7 +4,7 @@ import { Stage, Layer, Rect, Transformer } from "react-konva";
 import useInterval from "../hooks/useInterval";
 import { PAGE, usePage } from "../hooks/usePage";
 import { vla_rgb } from "../utils/vla_rgb";
-import { KonvaImage } from "../utils/utils";
+import { KonvaImage, PlayMode } from "../utils/utils";
 
 export enum GRADE {
   BAD,
@@ -18,6 +18,7 @@ const originalWidth = 800;
 const CANVAS_WIDTH = 375;
 
 const ANIMAL_NUM = 30;
+const ANIMAL_NUM_HARD = 91;
 // const CANVAS_HEIGHT = 548;
 function generateRandomScale(canvasHeight: number) {
   const initialScaleX = Math.random() * 0.4 + 1.0;
@@ -29,12 +30,14 @@ function generateRandomScale(canvasHeight: number) {
 }
 
 const INTERVAL = 2000;
+const INTERVAL_HARD = 1000;
 
 const culculateGrade = (lengthDiff: number) => {
   if (lengthDiff > 0.2) {
     return GRADE.BAD;
   } else if (lengthDiff > 0.1) {
     return GRADE.GOOD;
+    // TODO: 難易度調整
   } else if (lengthDiff > 0.03) {
     return GRADE.GREAT;
   } else {
@@ -45,7 +48,10 @@ const culculateGrade = (lengthDiff: number) => {
 export const Game: FC<{
   windowHeight: number;
   setGradeHistory: React.Dispatch<React.SetStateAction<number[]>>;
-}> = ({ windowHeight, setGradeHistory }) => {
+  mode: PlayMode;
+}> = ({ windowHeight, setGradeHistory, mode }) => {
+  const interval = mode === PlayMode.HARD ? INTERVAL_HARD : INTERVAL;
+  const animal_num = mode === PlayMode.HARD ? ANIMAL_NUM_HARD : ANIMAL_NUM;
   const canvasHeight = windowHeight;
   const [grade, setGrade] = useState<GRADE>();
   // const [isCorrect, setIsCorrect] = useState(false);
@@ -73,7 +79,7 @@ export const Game: FC<{
 
       setTimeout(() => {
         setPlaying2(true);
-      }, INTERVAL / 2);
+      }, interval / 2);
     } else {
       console.assert("Error");
     }
@@ -99,12 +105,12 @@ export const Game: FC<{
       // rectRef.current!.x(CANVAS_WIDTH / 2 - (CANVAS_WIDTH * newScaleX) / 2);
       // rectRef.current!.y(canvasHeight - canvasHeight * newScaleY);
 
-      if (count === ANIMAL_NUM) {
+      if (count === animal_num) {
         // 画面遷移しても以下のコードは最後まで実行される。
         setPlaying(false);
         setTimeout(() => {
           setPage(PAGE.RESULT);
-        }, INTERVAL);
+        }, interval);
       } else {
         const [newScaleX, newScaleY] = generateRandomScale(canvasHeight);
         rectRef.current!.scaleX(newScaleX);
@@ -114,7 +120,7 @@ export const Game: FC<{
         setCount((prev) => prev + 1);
       }
     },
-    isPlaying ? INTERVAL : null
+    isPlaying ? interval : null
   );
 
   useInterval(
@@ -122,7 +128,7 @@ export const Game: FC<{
       // 表示が残ってしまうので...
       setGrade(undefined);
     },
-    isPlaying2 ? INTERVAL : null
+    isPlaying2 ? interval : null
   );
 
   // const onClick = () => {
@@ -150,7 +156,7 @@ export const Game: FC<{
             "mt-1 basis-1/3 text-center text-4xl text-slate-600 font-bold"
           }
         >
-          {count} / {ANIMAL_NUM}
+          {count} / {animal_num}
         </div>
         <div className={"basis-1/3 text-right mr-2 mt-2 pointer-events-auto"}>
           <button
@@ -163,7 +169,11 @@ export const Game: FC<{
       </div>
 
       <div className="absolute z-50 right-0 left-0 top-1/2 flex justify-center pointer-events-none">
-        <div className="fade-out2s text-white text-5xl font-extrabold italic text-border">
+        <div
+          className={`fade-out${
+            mode === PlayMode.HARD ? "1" : "2"
+          }s text-white text-5xl font-extrabold italic text-border`}
+        >
           {grade !== undefined && GRADE[grade]}
         </div>
       </div>

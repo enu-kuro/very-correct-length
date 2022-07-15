@@ -1,39 +1,44 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { getScores, updateName, UserScore } from "../utils/firebase";
-import { getUID } from "../utils/utils";
+import {
+  getCurrentUser,
+  getScores,
+  refetchCurrentUser,
+  updateUserName,
+  UserScore,
+} from "../utils/firebase";
+import { PlayMode } from "../utils/utils";
 
 export const LeaderBoard = ({
   setShowModal,
 }: {
   setShowModal: Dispatch<SetStateAction<boolean>>;
 }) => {
-  const [userScores, setUserScores] = useState<UserScore[]>();
-  const [yourScore, setYourScore] = useState<UserScore>();
+  const [userScoresEasy, setUserScoresEasy] = useState<UserScore[]>();
+  const [userScoresHard, setUserScoresHard] = useState<UserScore[]>();
   const [showEditName, setShowEditName] = useState(false);
-
-  const [uid, setUID] = useState<string | null>();
-  const [yourName, setYourName] = useState<string>();
-
-  useEffect(() => {
-    setUID(getUID());
-  }, []);
+  const [isLoading, setIsLoading] = useState(false);
+  const [yourName, setYourName] = useState<string>("");
+  const [selectedMode, setSelectedMode] = useState(PlayMode.HARD);
+  const userScores =
+    selectedMode === PlayMode.HARD ? userScoresHard : userScoresEasy;
+  const currentUser = getCurrentUser();
+  const uid = currentUser?.uid;
 
   useEffect(() => {
     (async () => {
-      const _userScores = await getScores();
-      const sortedUserScores = [..._userScores].sort((a, b) => {
-        return b.score - a.score;
-      });
-      setUserScores(sortedUserScores);
-      const _yourScore = _userScores.find((data) => data.id === uid);
-      setYourScore(_yourScore);
-      setYourName(_yourScore?.name);
+      setIsLoading(true);
+      const userScores = await getScores();
+
+      console.log(userScores.data);
+      setUserScoresEasy(userScores.data.easy);
+      setUserScoresHard(userScores.data.hard);
+      setYourName(currentUser?.displayName || "");
+      setIsLoading(false);
     })();
-  }, [uid]);
+  }, [currentUser?.displayName, uid]);
 
   console.log(yourName);
-  console.log(yourScore);
-
+  console.log(currentUser?.displayName);
   return (
     <div
       className="modal modal-open"
@@ -76,30 +81,53 @@ export const LeaderBoard = ({
             <button
               className={"btn btn-sm"}
               onClick={() => {
-                updateName(uid!, yourName!)
-                  .then(async () => {
-                    const _userScores = await getScores();
-                    const sortedUserScores = [..._userScores].sort((a, b) => {
-                      return b.score - a.score;
+                if (yourName) {
+                  setIsLoading(true);
+                  setShowEditName(false);
+                  updateUserName({ name: yourName })
+                    .then(async () => {
+                      return refetchCurrentUser();
+
+                      // const userScores = await getScores();
+                      // setUserScoresEasy(userScores.data.easy);
+                      // setUserScoresHard(userScores.data.hard);
+                    })
+                    .then(() => {
+                      setIsLoading(false);
+                    })
+                    .catch((error) => {
+                      console.log(error);
+                      setIsLoading(false);
                     });
-                    setUserScores(sortedUserScores);
-                    const _yourScore = _userScores.find(
-                      (data) => data.id === uid
-                    );
-                    setYourScore(_yourScore);
-                    setYourName(_yourScore?.name);
-                    setShowEditName(false);
-                  })
-                  .catch((error) => {
-                    // TODO:
-                    console.log(error);
-                  });
+                }
               }}
             >
               ok
             </button>
           </div>
         )}
+        <div className="tabs">
+          <span
+            className={`tab tab-sm tab-lifted ${
+              selectedMode === PlayMode.EASY && "tab-active"
+            }`}
+            onClick={() => {
+              setSelectedMode(PlayMode.EASY);
+            }}
+          >
+            EASY
+          </span>
+          <span
+            className={`tab tab-sm tab-lifted ${
+              selectedMode === PlayMode.HARD && "tab-active"
+            }`}
+            onClick={() => {
+              setSelectedMode(PlayMode.HARD);
+            }}
+          >
+            HARD
+          </span>
+        </div>
         <table className="table table-compact w-full -mt-0">
           <thead>
             <tr>
@@ -118,17 +146,13 @@ export const LeaderBoard = ({
                 </tr>
               );
             })}
-            {/* {Array(200)
-              .fill(1)
-              .map((x, y) => (
-                <tr key={x + y} className="">
-                  <th>{x + y}</th>
-                  <td>hoge</td>
-                  <td>1</td>
-                </tr>
-              ))} */}
           </tbody>
         </table>
+        {isLoading && (
+          <div className="translate-x-2/4 absolute z-50 top-2/3 right-1/2">
+            <div className="animate-spin h-12 w-12 border-4 border-primary rounded-full border-t-transparent"></div>
+          </div>
+        )}
       </div>
     </div>
   );

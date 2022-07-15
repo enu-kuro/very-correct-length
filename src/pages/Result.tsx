@@ -3,7 +3,7 @@ import { PAGE, usePage } from "../hooks/usePage";
 import { GRADE } from "./Game";
 import { ChartSquareBarIcon, StarIcon } from "@heroicons/react/solid";
 import { StarIcon as OutlineStarIcon } from "@heroicons/react/outline";
-import { getHighestScore, saveScoreIfHighest } from "../utils/utils";
+import { getHighestScore, PlayMode, saveHighestScore } from "../utils/utils";
 import { TweetButton } from "../components/TweetButton";
 import { LeaderBoard } from "../components/LeaderBoard";
 
@@ -72,7 +72,11 @@ const Stars = (grade: GRADE) => {
     );
   }
 };
-export const Result: FC<{ gradeHistory: number[] }> = ({ gradeHistory }) => {
+
+export const Result: FC<{ gradeHistory: number[]; mode: PlayMode }> = ({
+  gradeHistory,
+  mode,
+}) => {
   const { setPage } = usePage();
   const grade = getMostfrequentGrade(gradeHistory);
   const [score, setScore] = useState<number>();
@@ -81,9 +85,9 @@ export const Result: FC<{ gradeHistory: number[] }> = ({ gradeHistory }) => {
   useEffect(() => {
     const _score = gradeHistory.reduce((partialSum, a) => partialSum + a, 0);
     setScore(_score);
-    saveScoreIfHighest(_score);
-    setHighestScore(getHighestScore());
-  }, [gradeHistory]);
+    saveHighestScore(_score, mode);
+    setHighestScore(getHighestScore(mode));
+  }, [gradeHistory, mode]);
 
   return (
     <div className="prose prose-slate container mx-auto flex flex-col items-center">

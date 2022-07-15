@@ -9,14 +9,30 @@ export const KonvaImage = (imagePath: string) => {
 
 const HIGHEST_SCORE_KEY = "bloamvexho";
 
+const EASY_HIGHEST_SCORE_KEY = "bloamvexhoe";
+const HARD_HIGHEST_SCORE_KEY = "bloamvexhoh";
+
+export enum PlayMode {
+  EASY = "EasyMode",
+  HARD = "HardMode",
+}
+
 const CRYPTO_KEY = "VeryLongAnimals";
 const CRYPTO_KEY2 = "verycorrectlength";
 
-const saveScoreFirestore = (score: number, encryptedStringScore: string) => {
+// const CRYPTO_KEY_EASY = "easy";
+const CRYPTO_KEY_HARD = "hard";
+
+const saveScoreFirestore = (
+  score: number,
+  encryptedStringScore: string,
+  mode: PlayMode
+) => {
   saveScore({
     pkYRAkEQw5: Math.random().toString(36).slice(2, 7),
     PQ8rn0Twca: encryptedStringScore,
     score: score,
+    mode: mode,
   })
     .then((result) => {
       const data = result.data;
@@ -26,28 +42,66 @@ const saveScoreFirestore = (score: number, encryptedStringScore: string) => {
       console.log(error);
     });
 };
-export const saveScoreIfHighest = (score: number) => {
+
+// export const saveScoreIfHighest = (score: number) => {
+//   console.log(score);
+//   const highestScore = getHighestScore();
+
+//   if (score > highestScore) {
+//     console.log(score.toString());
+//     const encryptedScore = crypto.AES.encrypt(
+//       score.toString(),
+//       CRYPTO_KEY + CRYPTO_KEY2
+//     );
+//     localStorage.setItem(HIGHEST_SCORE_KEY, encryptedScore.toString());
+//     saveScoreFirestore(score, encryptedScore.toString());
+//   }
+// };
+
+const getCryptoKey = (mode: PlayMode) => {
+  let cryptoKeyMode = "";
+  if (mode === PlayMode.EASY) {
+    // easymodeは以前と同じkeyにしておく
+    // cryptoKeyMode = CRYPTO_KEY_EASY;
+  } else if (mode === PlayMode.HARD) {
+    cryptoKeyMode = CRYPTO_KEY_HARD;
+  }
+  return CRYPTO_KEY + CRYPTO_KEY2 + cryptoKeyMode;
+};
+
+const getStorageKey = (mode: PlayMode) => {
+  let storageKey = EASY_HIGHEST_SCORE_KEY;
+  if (mode === PlayMode.HARD) {
+    storageKey = HARD_HIGHEST_SCORE_KEY;
+  }
+  return storageKey;
+};
+export const saveHighestScore = (score: number, mode: PlayMode) => {
   console.log(score);
-  const highestScore = getHighestScore();
+  const highestScore = getHighestScore(mode);
 
   if (score > highestScore) {
     console.log(score.toString());
     const encryptedScore = crypto.AES.encrypt(
       score.toString(),
-      CRYPTO_KEY + CRYPTO_KEY2
+      getCryptoKey(mode)
     );
-    localStorage.setItem(HIGHEST_SCORE_KEY, encryptedScore.toString());
-    saveScoreFirestore(score, encryptedScore.toString());
+    localStorage.setItem(getStorageKey(mode), encryptedScore.toString());
   }
+  saveScoreFirestore(
+    score,
+    localStorage.getItem(getStorageKey(mode))!.toString(),
+    mode
+  );
 };
 
-export const getHighestScore = () => {
-  const encryptedData = localStorage.getItem(HIGHEST_SCORE_KEY);
+export const getHighestScore = (mode: PlayMode) => {
+  const encryptedData = localStorage.getItem(getStorageKey(mode));
   let highestScore = 0;
   console.log(encryptedData);
   if (encryptedData) {
     highestScore = Number(
-      crypto.AES.decrypt(encryptedData, CRYPTO_KEY + CRYPTO_KEY2).toString(
+      crypto.AES.decrypt(encryptedData, getCryptoKey(mode)).toString(
         crypto.enc.Utf8
       )
     );
@@ -56,11 +110,11 @@ export const getHighestScore = () => {
   return highestScore;
 };
 
-const UID_KEY = "uid";
-export const saveUID = (uid: string) => {
-  localStorage.setItem(UID_KEY, uid);
-};
+// const UID_KEY = "uid";
+// export const saveUID = (uid: string) => {
+//   localStorage.setItem(UID_KEY, uid);
+// };
 
-export const getUID = () => {
-  return localStorage.getItem(UID_KEY);
-};
+// export const getUID = () => {
+//   return localStorage.getItem(UID_KEY);
+// };
