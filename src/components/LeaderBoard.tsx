@@ -27,6 +27,7 @@ export const LeaderBoard = ({
   useEffect(() => {
     (async () => {
       setIsLoading(true);
+      refetchCurrentUser();
       const userScores = await getScores();
 
       console.log(userScores.data);
@@ -37,8 +38,6 @@ export const LeaderBoard = ({
     })();
   }, [currentUser?.displayName, uid]);
 
-  console.log(yourName);
-  console.log(currentUser?.displayName);
   return (
     <div
       className="modal modal-open"
@@ -60,7 +59,7 @@ export const LeaderBoard = ({
         >
           ✕
         </label>
-        {uid && (
+        {yourName && (
           <div
             className={"prose-sm mt-10 underline"}
             onClick={() => {
