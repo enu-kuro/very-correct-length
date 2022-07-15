@@ -1,6 +1,6 @@
 import useImage from "use-image";
 import crypto from "crypto-js";
-import { saveScore } from "./firebase";
+import { getCurrentUser, refetchCurrentUser, saveScore } from "./firebase";
 
 export const KonvaImage = (imagePath: string) => {
   const [image] = useImage(imagePath);
@@ -23,16 +23,21 @@ const CRYPTO_KEY2 = "verycorrectlength";
 // const CRYPTO_KEY_EASY = "easy";
 const CRYPTO_KEY_HARD = "hard";
 
-const saveScoreFirestore = (
+const saveScoreFirestore = async (
   score: number,
   encryptedStringScore: string,
   mode: PlayMode
 ) => {
+  if (!getCurrentUser()?.displayName) {
+    await refetchCurrentUser();
+  }
+
   saveScore({
     pkYRAkEQw5: Math.random().toString(36).slice(2, 7),
     PQ8rn0Twca: encryptedStringScore,
     score: score,
     mode: mode,
+    name: getCurrentUser()?.displayName || "",
   })
     .then((result) => {
       const data = result.data;
@@ -78,7 +83,7 @@ const getStorageKey = (mode: PlayMode) => {
 };
 export const saveHighestScore = (score: number, mode: PlayMode) => {
   console.log(score);
-  const highestScore = getHighestScore(mode);
+  let highestScore = getHighestScore(mode);
 
   if (score > highestScore) {
     console.log(score.toString());
@@ -87,9 +92,10 @@ export const saveHighestScore = (score: number, mode: PlayMode) => {
       getCryptoKey(mode)
     );
     localStorage.setItem(getStorageKey(mode), encryptedScore.toString());
+    highestScore = score;
   }
   saveScoreFirestore(
-    score,
+    highestScore,
     localStorage.getItem(getStorageKey(mode))!.toString(),
     mode
   );

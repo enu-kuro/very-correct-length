@@ -27,13 +27,13 @@ export const LeaderBoard = ({
   useEffect(() => {
     (async () => {
       setIsLoading(true);
-      refetchCurrentUser();
+      await refetchCurrentUser();
       const userScores = await getScores();
 
       console.log(userScores.data);
       setUserScoresEasy(userScores.data.easy);
       setUserScoresHard(userScores.data.hard);
-      setYourName(currentUser?.displayName || "");
+      setYourName(getCurrentUser()?.displayName || "");
       setIsLoading(false);
     })();
   }, [currentUser?.displayName, uid]);

@@ -11,7 +11,7 @@ import {
 } from "firebase/auth";
 import { doc, getFirestore, updateDoc } from "firebase/firestore";
 import { getFunctions, httpsCallable } from "firebase/functions";
-// import { PlayMode } from "./utils";
+import { PlayMode } from "./utils";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_APIKEY,
@@ -39,7 +39,16 @@ const functions = getFunctions(firebaseApp);
 //     console.log(error);
 //   });
 
-export const saveScore = httpsCallable(functions, "nmgIpjNOiD2");
+export const saveScore = httpsCallable<
+  {
+    pkYRAkEQw5: string;
+    PQ8rn0Twca: string;
+    score: number;
+    mode: PlayMode;
+    name: string;
+  },
+  { score: number }
+>(functions, "nmgIpjNOiD2");
 export const getScores = httpsCallable<
   {},
   { easy: UserScore[]; hard: UserScore[] }
@@ -77,16 +86,16 @@ export type UserScore = {
 //   return userScores as UserScore[];
 // };
 
-export const updateName = (uid: string, newName: string) => {
-  const usersCollectionRef = doc(db, "users", uid);
-  return updateDoc(usersCollectionRef, {
-    name: newName,
-  });
-  // .catch((error) => {
-  //   // TODO:
-  //   console.log(error);
-  // });
-};
+// export const updateName = (uid: string, newName: string) => {
+//   const usersCollectionRef = doc(db, "users", uid);
+//   return updateDoc(usersCollectionRef, {
+//     name: newName,
+//   });
+//   // .catch((error) => {
+//   //   // TODO:
+//   //   console.log(error);
+//   // });
+// };
 
 export const loginGuest = async () => {
   const auth = getAuth();
@@ -115,3 +124,11 @@ export const getCurrentUser = () => {
 export const refetchCurrentUser = () => {
   return getAuth().currentUser?.reload() || Promise.reject();
 };
+
+// export const hoge = () => {
+//   const user = getAuth().currentUser;
+//   console.log(user);
+//   updateProfile(user!, { displayName: "" }).catch((error) => {
+//     console.log(error);
+//   });
+// };

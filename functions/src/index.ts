@@ -99,6 +99,7 @@ export const nmgIpjNOiD2 = functions.https.onCall(
       PQ8rn0Twca: string;
       score: number;
       mode: PlayMode;
+      name: string;
     },
     context
   ) => {
@@ -107,6 +108,15 @@ export const nmgIpjNOiD2 = functions.https.onCall(
         "permission-denied",
         "permission denied"
       );
+    }
+
+    let name = data.name;
+
+    if (name === "") {
+      name = "very-" + hri.random();
+      await admin.auth().updateUser(context.auth.uid, {
+        displayName: name,
+      });
     }
 
     let cryptoKeyMode = "";
@@ -141,6 +151,7 @@ export const nmgIpjNOiD2 = functions.https.onCall(
     await db.collection(collectionName).doc(context.auth.uid).set(
       {
         score: decryptedScore,
+        name: name,
       },
       { merge: true }
     );
@@ -221,3 +232,50 @@ export const updateUserName = functions.https.onCall(
     return { ok: true };
   }
 );
+
+// export const migration = functions.https.onRequest(
+//   async (request, response) => {
+//     functions.logger.info("Hello logs!", { structuredData: true });
+
+//     const users = await db
+//       .collection("users")
+//       .get()
+//       .then((querySnapshot) => {
+//         return querySnapshot.docs.map((doc) => {
+//           const data = doc.data();
+//           return {
+//             id: doc.id,
+//             score: data.score,
+//             name: data.name,
+//           };
+//         });
+//       });
+//     users.forEach((user) => {
+//       const name = user.name;
+//       const uid = user.id;
+//       const score = user.score;
+//       const easyModePromise = db.collection(PlayMode.EASY).doc(uid).set(
+//         {
+//           score: score,
+//           name: name,
+//         },
+//         { merge: true }
+//       );
+//       const hardModePromise = db.collection(PlayMode.HARD).doc(uid).set(
+//         {
+//           name: name,
+//         },
+//         { merge: true }
+//       );
+//       const updateUserPromise = admin.auth().updateUser(uid, {
+//         displayName: name,
+//       });
+//       const promises = [easyModePromise, hardModePromise, updateUserPromise];
+//       Promise.all(promises).catch((error) => {
+//         console.error(error);
+//         throw new functions.https.HttpsError("internal", "internal");
+//       });
+//     });
+//     return;
+//   }
+// );
