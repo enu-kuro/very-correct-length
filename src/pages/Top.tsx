@@ -29,6 +29,15 @@ export const Top = () => {
       )}
       {showLearderBoard && <LeaderBoard setShowModal={setShowLearderBoard} />}
       <div className="p-5 prose prose-slate container mx-auto flex flex-col items-center justify-between h-[600px]">
+        <div
+          className="opacity-0 absolute top-0 right-0"
+          onClick={() => {
+            window.history.replaceState(null, "", "/#hard");
+            setPage(PAGE.COUNT_DOWN);
+          }}
+        >
+          VERY HARD MODE
+        </div>
         <h1 className="w-64 mt-10">VERY CORRECT LENGTH (β)</h1>
         <div className="flex flex-col">
           <button
@@ -71,15 +80,6 @@ export const Top = () => {
               <ChartSquareBarIcon className="w-5 h-5" />
             </button>
           </div>
-        </div>
-        <div
-          className="opacity-0 absolute bottom-0"
-          onClick={() => {
-            window.history.replaceState(null, "", "/#hard");
-            setPage(PAGE.COUNT_DOWN);
-          }}
-        >
-          VERY HARD MODE
         </div>
       </div>
     </>

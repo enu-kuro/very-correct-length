@@ -156,7 +156,7 @@ export const nmgIpjNOiD2 = functions.https.onCall(
       .get()
       .then((doc) => {
         const docData = doc.data();
-        if (docData?.score < data.score) {
+        if (!docData || !docData.score || docData.score < data.score) {
           updated = true;
           return doc.ref.set(
             {
