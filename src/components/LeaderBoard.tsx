@@ -18,7 +18,7 @@ export const LeaderBoard = ({
   const [showEditName, setShowEditName] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [yourName, setYourName] = useState<string>("");
-  const [selectedMode, setSelectedMode] = useState(PlayMode.EASY);
+  const [selectedMode, setSelectedMode] = useState(PlayMode.HARD);
   const userScores =
     selectedMode === PlayMode.HARD ? userScoresHard : userScoresEasy;
   const currentUser = getCurrentUser();
@@ -102,7 +102,7 @@ export const LeaderBoard = ({
             </button>
           </div>
         )}
-        {/* <div className="tabs">
+        <div className="tabs mt-3">
           <span
             className={`tab tab-sm tab-lifted ${
               selectedMode === PlayMode.EASY && "tab-active"
@@ -123,7 +123,7 @@ export const LeaderBoard = ({
           >
             HARD
           </span>
-        </div> */}
+        </div>
         <table className="table table-compact w-full -mt-0">
           <thead>
             <tr>

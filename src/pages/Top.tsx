@@ -33,7 +33,7 @@ export const Top = () => {
       )}
       {showLearderBoard && <LeaderBoard setShowModal={setShowLearderBoard} />}
       <div className="p-5 prose prose-slate container mx-auto flex flex-col items-center justify-between h-[600px]">
-        <div
+        {/* <div
           className="opacity-0 absolute top-0 right-0"
           onClick={() => {
             clickSound?.play();
@@ -42,7 +42,7 @@ export const Top = () => {
           }}
         >
           VERY HARD MODE
-        </div>
+        </div> */}
         <h1 className="w-64 mt-10">VERY CORRECT LENGTH (β)</h1>
 
         <div className="flex flex-col">
@@ -56,16 +56,17 @@ export const Top = () => {
           >
             Very easy mode
           </button>
-          <button disabled className={"btn btn-wide gap-2 mt-10"}>
-            {/* <button
-            className={"btn btn-wide mt-10"}
+          {/* <button disabled className={"btn btn-wide gap-2 mt-10"}> */}
+          <button
+            className={"btn btn-wide mt-10  btn-primary"}
             onClick={() => {
+              clickSound?.play();
               window.history.replaceState(null, "", "/#hard");
               setPage(PAGE.COUNT_DOWN);
             }}
-          > */}
+          >
             Very hard mode
-            <LockIcon className="w-5 h-5" />
+            {/* <LockIcon className="w-5 h-5" /> */}
           </button>
           <div
             className={"prose-sm mt-2 text-center underline"}
