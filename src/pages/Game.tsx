@@ -46,7 +46,7 @@ const culculateGrade = (lengthDiff: number) => {
   } else if (lengthDiff > 0.1) {
     return GRADE.GOOD;
     // TODO: 難易度調整
-  } else if (lengthDiff > 0.035) {
+  } else if (lengthDiff > 0.04) {
     return GRADE.GREAT;
   } else {
     return GRADE.EXCELENT;
