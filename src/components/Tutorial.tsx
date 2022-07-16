@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import Konva from "konva";
 import { Stage, Layer, Rect, Transformer, Line } from "react-konva";
 import { vla_rgb } from "../utils/vla_rgb";
-import { KonvaImage } from "../utils/utils";
+import { clickSound, KonvaImage } from "../utils/utils";
 import { HandGestureIcon } from "./HandGestureIcon";
 
 export const Tutorial = ({
@@ -39,6 +39,7 @@ export const Tutorial = ({
         <label
           className="btn btn-circle absolute right-2 top-2 z-50"
           onClick={() => {
+            clickSound.play();
             setShowModal(false);
           }}
         >

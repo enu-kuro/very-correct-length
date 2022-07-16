@@ -6,7 +6,7 @@ import {
   updateUserName,
   UserScore,
 } from "../utils/firebase";
-import { PlayMode } from "../utils/utils";
+import { clickSound, PlayMode } from "../utils/utils";
 
 export const LeaderBoard = ({
   setShowModal,
@@ -54,6 +54,7 @@ export const LeaderBoard = ({
         <label
           className="btn btn-circle absolute right-2 top-2 z-50"
           onClick={() => {
+            clickSound.play();
             setShowModal(false);
           }}
         >

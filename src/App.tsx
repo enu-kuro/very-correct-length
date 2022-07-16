@@ -27,6 +27,7 @@ const Page = () => {
         <Game
           windowHeight={windowSize.height}
           setGradeHistory={setGradeHistory}
+          gradeHistory={gradeHistory}
           mode={mode}
         />
       );

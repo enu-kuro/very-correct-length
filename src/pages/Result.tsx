@@ -3,7 +3,13 @@ import { PAGE, usePage } from "../hooks/usePage";
 import { GRADE } from "./Game";
 import { ChartSquareBarIcon, StarIcon } from "@heroicons/react/solid";
 import { StarIcon as OutlineStarIcon } from "@heroicons/react/outline";
-import { getHighestScore, PlayMode, saveHighestScore } from "../utils/utils";
+import {
+  clickSound,
+  getHighestScore,
+  PlayMode,
+  resultSound,
+  saveHighestScore,
+} from "../utils/utils";
 import { TweetButton } from "../components/TweetButton";
 import { LeaderBoard } from "../components/LeaderBoard";
 
@@ -85,8 +91,9 @@ export const Result: FC<{ gradeHistory: number[]; mode: PlayMode }> = ({
   useEffect(() => {
     const _score = gradeHistory.reduce((partialSum, a) => partialSum + a, 0);
     setScore(_score);
-    saveHighestScore(_score, mode);
+    // saveHighestScore(_score, mode);
     setHighestScore(getHighestScore(mode));
+    resultSound.play();
   }, [gradeHistory, mode]);
 
   return (
@@ -113,6 +120,7 @@ export const Result: FC<{ gradeHistory: number[]; mode: PlayMode }> = ({
         <button
           className={"btn btn-sm btn-accent"}
           onClick={() => {
+            clickSound.play();
             setShowLearderBoard(true);
           }}
         >
@@ -123,6 +131,7 @@ export const Result: FC<{ gradeHistory: number[]; mode: PlayMode }> = ({
       <button
         className={"btn btn-wide mt-auto"}
         onClick={() => {
+          clickSound.play();
           setPage(PAGE.TOP);
         }}
       >

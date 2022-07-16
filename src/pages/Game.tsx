@@ -4,7 +4,15 @@ import { Stage, Layer, Rect, Transformer } from "react-konva";
 import useInterval from "../hooks/useInterval";
 import { PAGE, usePage } from "../hooks/usePage";
 import { vla_rgb } from "../utils/vla_rgb";
-import { KonvaImage, PlayMode } from "../utils/utils";
+import {
+  bgmSound,
+  clickSound,
+  extendSound,
+  getHighestScore,
+  KonvaImage,
+  PlayMode,
+  saveHighestScore,
+} from "../utils/utils";
 
 export enum GRADE {
   BAD,
@@ -38,7 +46,7 @@ const culculateGrade = (lengthDiff: number) => {
   } else if (lengthDiff > 0.1) {
     return GRADE.GOOD;
     // TODO: 難易度調整
-  } else if (lengthDiff > 0.03) {
+  } else if (lengthDiff > 0.035) {
     return GRADE.GREAT;
   } else {
     return GRADE.EXCELENT;
@@ -47,9 +55,10 @@ const culculateGrade = (lengthDiff: number) => {
 
 export const Game: FC<{
   windowHeight: number;
+  gradeHistory: number[];
   setGradeHistory: React.Dispatch<React.SetStateAction<number[]>>;
   mode: PlayMode;
-}> = ({ windowHeight, setGradeHistory, mode }) => {
+}> = ({ windowHeight, gradeHistory, setGradeHistory, mode }) => {
   const interval = mode === PlayMode.HARD ? INTERVAL_HARD : INTERVAL;
   const animal_num = mode === PlayMode.HARD ? ANIMAL_NUM_HARD : ANIMAL_NUM;
   const canvasHeight = windowHeight;
@@ -62,9 +71,10 @@ export const Game: FC<{
   const [isPlaying2, setPlaying2] = useState<boolean>(false);
   // 1からにしておく(#0のanimalはNFT化されていない)
   const [count, setCount] = useState<number>(1);
-
+  const isSound = useRef(true);
   useEffect(() => {
     if (trRef.current && rectRef.current) {
+      bgmSound.play();
       const [initialScaleX, initialScaleY] = generateRandomScale(canvasHeight);
       // we need to attach transformer manually
       rectRef.current!.scaleY(initialScaleY);
@@ -83,10 +93,17 @@ export const Game: FC<{
     } else {
       console.assert("Error");
     }
+    return () => {
+      bgmSound.pause();
+      bgmSound.currentTime = 0;
+    };
   }, []);
 
   useInterval(
     () => {
+      isSound.current = true;
+      // extendSound.load();
+      // extendSound.currentTime = 0;
       const stretchedlength = trRef.current!.getHeight();
       const correctLength = trRef.current!.getWidth();
       console.log("長さ: ", trRef.current!.getHeight());
@@ -106,8 +123,12 @@ export const Game: FC<{
       // rectRef.current!.y(canvasHeight - canvasHeight * newScaleY);
 
       if (count === animal_num) {
-        // 画面遷移しても以下のコードは最後まで実行される。
         setPlaying(false);
+        const _score = gradeHistory.reduce(
+          (partialSum, a) => partialSum + a,
+          0
+        );
+        saveHighestScore(_score, mode);
         setTimeout(() => {
           setPage(PAGE.RESULT);
         }, interval);
@@ -142,6 +163,7 @@ export const Game: FC<{
   // };
 
   const onClickQuit = () => {
+    clickSound.play();
     setPage(PAGE.TOP);
   };
   const image = KonvaImage(`vla/vla${count % 92}.jpg`);
@@ -209,18 +231,22 @@ export const Game: FC<{
               flipEnabled={false}
               rotateEnabled={false}
               padding={-50}
-              // boundBoxFunc={(oldBox, newBox) => {
-              //   if (newBox.height > newBox.width) {
-              //     console.log("ok!!!!!!!");
-              //     console.log(newBox.width, newBox.height);
-              //   }
+              boundBoxFunc={(oldBox, newBox) => {
+                // if (newBox.height > newBox.width) {
+                //   console.log("ok!!!!!!!");
+                //   console.log(newBox.width, newBox.height);
+                // }
 
-              //   // limit resize
-              //   if (newBox.width < 5 || newBox.height < 5) {
-              //     return oldBox;
-              //   }
-              //   return newBox;
-              // }}
+                // limit resize
+                if (newBox.height > 150 && isSound.current) {
+                  extendSound.pause();
+                  extendSound.currentTime = 0;
+                  extendSound.play();
+                  isSound.current = false;
+                  return newBox;
+                }
+                return newBox;
+              }}
             />
           </Layer>
         </Stage>

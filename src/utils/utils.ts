@@ -128,3 +128,40 @@ export const getHighestScore = (mode: PlayMode) => {
 // export const getUID = () => {
 //   return localStorage.getItem(UID_KEY);
 // };
+
+export const clickSound = new Audio("button55.mp3");
+clickSound.load();
+
+export const countDownSound = new Audio("button16.mp3");
+countDownSound.load();
+
+export const countDownSound2 = new Audio("button26.mp3");
+countDownSound2.load();
+
+export const extendSound = new Audio("button23.mp3");
+extendSound.load();
+
+export const resultSound = new Audio("orch-hit02.mp3");
+resultSound.load();
+
+export const bgmSound = new Audio("VeryLongAnimals_BGM.mp3");
+bgmSound.load();
+bgmSound.loop = true;
+
+export const setSound = (isSound: boolean) => {
+  if (isSound) {
+    clickSound.volume = 1;
+    countDownSound.volume = 1;
+    countDownSound2.volume = 1;
+    extendSound.volume = 1;
+    bgmSound.volume = 0.3;
+    resultSound.volume = 1;
+  } else {
+    clickSound.volume = 0;
+    countDownSound.volume = 0;
+    countDownSound2.volume = 0;
+    extendSound.volume = 0;
+    bgmSound.volume = 0;
+    resultSound.volume = 0;
+  }
+};
