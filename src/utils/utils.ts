@@ -1,6 +1,7 @@
 import useImage from "use-image";
 import crypto from "crypto-js";
 import { getCurrentUser, refetchCurrentUser, saveScore } from "./firebase";
+import { isIOS } from "react-device-detect";
 
 export const KonvaImage = (imagePath: string) => {
   const [image] = useImage(imagePath);
@@ -129,39 +130,54 @@ export const getHighestScore = (mode: PlayMode) => {
 //   return localStorage.getItem(UID_KEY);
 // };
 
-export const clickSound = new Audio("button55.mp3");
-clickSound.load();
+export let clickSound: HTMLAudioElement | null | undefined;
+export let countDownSound: HTMLAudioElement | null | undefined;
+export let countDownSound2: HTMLAudioElement | null | undefined;
+export let extendSound: HTMLAudioElement | null | undefined;
+export let resultSound: HTMLAudioElement | null | undefined;
+export let bgmSound: HTMLAudioElement | null | undefined;
+if (isIOS) {
+} else {
+  clickSound = new Audio("button55.mp3");
+  clickSound.load();
+  countDownSound = new Audio("button16.mp3");
+  countDownSound.load();
 
-export const countDownSound = new Audio("button16.mp3");
-countDownSound.load();
+  countDownSound2 = new Audio("button26.mp3");
+  countDownSound2.load();
 
-export const countDownSound2 = new Audio("button26.mp3");
-countDownSound2.load();
+  extendSound = new Audio("button23.mp3");
+  extendSound.load();
 
-export const extendSound = new Audio("button23.mp3");
-extendSound.load();
+  resultSound = new Audio("orch-hit02.mp3");
+  resultSound.load();
 
-export const resultSound = new Audio("orch-hit02.mp3");
-resultSound.load();
+  bgmSound = new Audio("VeryLongAnimals_BGM.mp3");
+  bgmSound.load();
+  bgmSound.loop = true;
 
-export const bgmSound = new Audio("VeryLongAnimals_BGM.mp3");
-bgmSound.load();
-bgmSound.loop = true;
+  clickSound.volume = 0;
+  countDownSound.volume = 0;
+  countDownSound2.volume = 0;
+  extendSound.volume = 0;
+  bgmSound.volume = 0;
+  resultSound.volume = 0;
+}
 
 export const setSound = (isSound: boolean) => {
   if (isSound) {
-    clickSound.volume = 1;
-    countDownSound.volume = 1;
-    countDownSound2.volume = 1;
-    extendSound.volume = 1;
-    bgmSound.volume = 0.3;
-    resultSound.volume = 1;
+    clickSound!.volume = 1;
+    countDownSound!.volume = 1;
+    countDownSound2!.volume = 1;
+    extendSound!.volume = 1;
+    bgmSound!.volume = 0.7;
+    resultSound!.volume = 1;
   } else {
-    clickSound.volume = 0;
-    countDownSound.volume = 0;
-    countDownSound2.volume = 0;
-    extendSound.volume = 0;
-    bgmSound.volume = 0;
-    resultSound.volume = 0;
+    clickSound!.volume = 0;
+    countDownSound!.volume = 0;
+    countDownSound2!.volume = 0;
+    extendSound!.volume = 0;
+    bgmSound!.volume = 0;
+    resultSound!.volume = 0;
   }
 };

@@ -8,7 +8,6 @@ import {
   bgmSound,
   clickSound,
   extendSound,
-  getHighestScore,
   KonvaImage,
   PlayMode,
   saveHighestScore,
@@ -74,7 +73,7 @@ export const Game: FC<{
   const isSound = useRef(true);
   useEffect(() => {
     if (trRef.current && rectRef.current) {
-      bgmSound.play();
+      bgmSound?.play();
       const [initialScaleX, initialScaleY] = generateRandomScale(canvasHeight);
       // we need to attach transformer manually
       rectRef.current!.scaleY(initialScaleY);
@@ -94,8 +93,10 @@ export const Game: FC<{
       console.assert("Error");
     }
     return () => {
-      bgmSound.pause();
-      bgmSound.currentTime = 0;
+      if (bgmSound) {
+        bgmSound.pause();
+        bgmSound.currentTime = 0;
+      }
     };
   }, []);
 
@@ -163,7 +164,7 @@ export const Game: FC<{
   // };
 
   const onClickQuit = () => {
-    clickSound.play();
+    clickSound?.play();
     setPage(PAGE.TOP);
   };
   const image = KonvaImage(`vla/vla${count % 92}.jpg`);
@@ -239,9 +240,12 @@ export const Game: FC<{
 
                 // limit resize
                 if (newBox.height > 150 && isSound.current) {
-                  extendSound.pause();
-                  extendSound.currentTime = 0;
-                  extendSound.play();
+                  if (extendSound) {
+                    extendSound?.pause();
+                    extendSound.currentTime = 0;
+                    extendSound.play();
+                  }
+
                   isSound.current = false;
                   return newBox;
                 }

@@ -39,7 +39,7 @@ export const Tutorial = ({
         <label
           className="btn btn-circle absolute right-2 top-2 z-50"
           onClick={() => {
-            clickSound.play();
+            clickSound?.play();
             setShowModal(false);
           }}
         >

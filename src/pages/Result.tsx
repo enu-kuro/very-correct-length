@@ -93,7 +93,7 @@ export const Result: FC<{ gradeHistory: number[]; mode: PlayMode }> = ({
     setScore(_score);
     // saveHighestScore(_score, mode);
     setHighestScore(getHighestScore(mode));
-    resultSound.play();
+    resultSound?.play();
   }, [gradeHistory, mode]);
 
   return (
@@ -120,7 +120,7 @@ export const Result: FC<{ gradeHistory: number[]; mode: PlayMode }> = ({
         <button
           className={"btn btn-sm btn-accent"}
           onClick={() => {
-            clickSound.play();
+            clickSound?.play();
             setShowLearderBoard(true);
           }}
         >
@@ -131,7 +131,7 @@ export const Result: FC<{ gradeHistory: number[]; mode: PlayMode }> = ({
       <button
         className={"btn btn-wide mt-auto"}
         onClick={() => {
-          clickSound.play();
+          clickSound?.play();
           setPage(PAGE.TOP);
         }}
       >

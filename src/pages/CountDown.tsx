@@ -8,10 +8,10 @@ export const CountDown = () => {
   const [count, setCount] = useState(3);
   useInterval(() => {
     if (count === 1) {
-      countDownSound2.play();
+      countDownSound2?.play();
       setPage(PAGE.GAME);
     } else {
-      countDownSound.play();
+      countDownSound?.play();
     }
     setCount((prev) => prev - 1);
   }, 1000);
