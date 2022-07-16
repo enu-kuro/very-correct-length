@@ -41,17 +41,16 @@ export const Top = () => {
             Very easy mode
           </button>
 
-          {/* <button disabled className={"btn btn-wide gap-2 mt-10"}> */}
-          <button
+          <button disabled className={"btn btn-wide gap-2 mt-10"}>
+            {/* <button
             className={"btn btn-wide mt-10"}
             onClick={() => {
               window.history.replaceState(null, "", "/#hard");
-              console.log(window.location.hash);
               setPage(PAGE.COUNT_DOWN);
             }}
-          >
+          > */}
             Very hard mode
-            {/* <LockIcon className="w-5 h-5" /> */}
+            <LockIcon className="w-5 h-5" />
           </button>
           <div
             className={"prose-sm mt-2 text-center underline"}
@@ -72,6 +71,15 @@ export const Top = () => {
               <ChartSquareBarIcon className="w-5 h-5" />
             </button>
           </div>
+        </div>
+        <div
+          className="opacity-0 absolute bottom-0"
+          onClick={() => {
+            window.history.replaceState(null, "", "/#hard");
+            setPage(PAGE.COUNT_DOWN);
+          }}
+        >
+          VERY HARD MODE
         </div>
       </div>
     </>
