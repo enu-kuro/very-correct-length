@@ -137,7 +137,7 @@ export const nmgIpjNOiD2 = functions.https.onCall(
 
     const decryptedScore = Number(
       AES.decrypt(
-        data.PQ8rn0Twca,
+        AES.decrypt(data.PQ8rn0Twca, context.auth.uid).toString(enc.Utf8),
         CRYPTO_KEY + CRYPTO_KEY2 + cryptoKeyMode
       ).toString(enc.Utf8)
     );
@@ -148,15 +148,39 @@ export const nmgIpjNOiD2 = functions.https.onCall(
         "invalid argument"
       );
     }
-    await db.collection(collectionName).doc(context.auth.uid).set(
-      {
-        score: decryptedScore,
-        name: name,
-      },
-      { merge: true }
-    );
 
-    return { score: data.score };
+    let updated = false;
+    await db
+      .collection(collectionName)
+      .doc(context.auth.uid)
+      .get()
+      .then((doc) => {
+        const docData = doc.data();
+        if (docData?.score < data.score) {
+          updated = true;
+          return doc.ref.set(
+            {
+              score: decryptedScore,
+              name: name,
+              updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+            },
+            { merge: true }
+          );
+        } else {
+          return;
+        }
+      });
+
+    // await db.collection(collectionName).doc(context.auth.uid).set(
+    //   {
+    //     score: decryptedScore,
+    //     name: name,
+    //     updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+    //   },
+    //   { merge: true }
+    // );
+
+    return { score: data.score, updated: updated };
   }
 );
 

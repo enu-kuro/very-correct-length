@@ -32,9 +32,13 @@ const saveScoreFirestore = async (
     await refetchCurrentUser();
   }
 
+  const reEncryptedScore = crypto.AES.encrypt(
+    encryptedStringScore,
+    getCurrentUser()!.uid
+  );
   saveScore({
     pkYRAkEQw5: Math.random().toString(36).slice(2, 7),
-    PQ8rn0Twca: encryptedStringScore,
+    PQ8rn0Twca: reEncryptedScore.toString(),
     score: score,
     mode: mode,
     name: getCurrentUser()?.displayName || "",

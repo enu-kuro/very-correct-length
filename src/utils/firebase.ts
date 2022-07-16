@@ -47,7 +47,7 @@ export const saveScore = httpsCallable<
     mode: PlayMode;
     name: string;
   },
-  { score: number }
+  { score: number; updated: boolean }
 >(functions, "nmgIpjNOiD2");
 export const getScores = httpsCallable<
   {},

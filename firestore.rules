@@ -4,7 +4,7 @@ service cloud.firestore {
     match /users/{user} {
       allow read: if true;
       // Allow a client to update only these 6 fields in a document
-      // allow update: if (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name']));
+      allow update: if (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name']));
     }
   }
 }
